@@ -3,7 +3,8 @@ package xml
 import (
 	"fmt"
 	"strconv"
-	"strings"
+
+	"github.com/docculi-company/gen"
 )
 
 //
@@ -91,7 +92,7 @@ func XmlJobCrawl(depth int, jobDepth int, jobIndex string, jobMap *map[string]in
 				if _, ok := value.(map[string]interface{}); ok {
 					//jobUuid := uuid.New().String()
 					valueMsi := value.(map[string]interface{})
-					SanitizeMsi(&valueMsi)
+					gen.SanitizeMsi(&valueMsi)
 					key := fmt.Sprintf("%v", valueMsi[jobIndex])
 					//(*jobMap)[jobUuid] = valueMsi
 					(*jobMap)[key] = valueMsi
@@ -104,21 +105,4 @@ func XmlJobCrawl(depth int, jobDepth int, jobIndex string, jobMap *map[string]in
 	}
 
 	return true
-}
-
-//
-//
-// SanitizeMsi
-//
-//
-func SanitizeMsi(msi *map[string]interface{}) {
-	for key, value := range *msi {
-		if strings.ContainsAny(value.(string), "%") {
-			value = strings.ReplaceAll(value.(string), "%", "&percnt;")
-		}
-		if strings.ContainsAny(value.(string), "\"") {
-			value = strings.ReplaceAll(value.(string), "\"", "&quot;")
-		}
-		(*msi)[key] = value
-	}
 }
